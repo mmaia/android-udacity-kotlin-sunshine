@@ -61,7 +61,7 @@ class OpenWeatherJsonUtils {
       val OWM_MESSAGE_CODE = "cod"
 
       /* String array to hold each day's weather String */
-      var parsedWeatherData: Array<String>
+      var parsedWeatherData: Array<String> = emptyArray()
 
       val forecastJson = JSONObject(forecastJsonStr)
 
@@ -83,13 +83,14 @@ class OpenWeatherJsonUtils {
 
       val weatherArray = forecastJson.getJSONArray(OWM_LIST)
 
-      parsedWeatherData = emptyArray()
-
       val localDate = System.currentTimeMillis()
       val utcDate = SunshineDateUtils.getUTCDateFromLocal(localDate)
       val startDay = SunshineDateUtils.normalizeDate(utcDate)
 
+      parsedWeatherData = Array(weatherArray.length(), {""})
+
       for (i in 0 until weatherArray.length()) {
+
         val date: String
         val highAndLow: String
 
@@ -127,8 +128,7 @@ class OpenWeatherJsonUtils {
         high = temperatureObject.getDouble(OWM_MAX)
         low = temperatureObject.getDouble(OWM_MIN)
         highAndLow = SunshineWeatherUtils.formatHighLows(context, high, low)
-
-        parsedWeatherData[i] = "$date - $description - $highAndLow"
+        parsedWeatherData.set(i, "$date - $description - $highAndLow")
       }
 
       return parsedWeatherData
