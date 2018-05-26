@@ -34,6 +34,21 @@ class SunshineDateUtils {
     val DAY_IN_MILLIS = HOUR_IN_MILLIS * 24
 
     /**
+     * This method returns the number of days since the epoch (January 01, 1970, 12:00 Midnight UTC)
+     * in UTC time from the current date.
+     *
+     * @param date A date in milliseconds in local time.
+     *
+     * @return The number of days in UTC time from the epoch.
+     */
+    fun getDayNumber(date: Long): Long {
+      val tz = TimeZone.getDefault()
+      val gmtOffset = tz.getOffset(date).toLong()
+      return (date + gmtOffset) / DAY_IN_MILLIS
+    }
+
+
+    /**
      * To make it easy to query for the exact date, we normalize all dates that go into
      * the database to the start of the day in UTC time.
      *
@@ -106,19 +121,6 @@ class SunshineDateUtils {
 
         return DateUtils.formatDateTime(context, localDate, flags)
       }
-    }
-    /**
-     * This method returns the number of days since the epoch (January 01, 1970, 12:00 Midnight UTC)
-     * in UTC time from the current date.
-     *
-     * @param date A date in milliseconds in local time.
-     *
-     * @return The number of days in UTC time from the epoch.
-     */
-    fun getDayNumber(date: Long): Long {
-      val tz = TimeZone.getDefault()
-      val gmtOffset = tz.getOffset(date).toLong()
-      return (date + gmtOffset) / DAY_IN_MILLIS
     }
 
     /**
